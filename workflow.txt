@@ -1,0 +1,5 @@
+User pastes in any URL (can be outside of localhost)
+
+I generate a short localhost URL that the user will type in
+
+The short local host url will redirect to the long outside URl
