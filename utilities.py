@@ -9,7 +9,7 @@ def generate_short_url():
     for i in range(7):
         ans += random.choice(BASE_62)
 
-    return ans, len(ans)
+    return ans
 
 def is_valid_url(url:str) -> bool:
     try:
