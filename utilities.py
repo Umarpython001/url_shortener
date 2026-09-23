@@ -1,21 +1,25 @@
-from urllib.parse import urlparse #Used to validate the long url that the user provides
+import re
 import random
 
 BASE_62 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 def generate_short_url():
 
-    ans = "https://shorten.com/"
+    short_url = "http://localhost:8000/shortener/"
+    code=""
     for i in range(7):
-        ans += random.choice(BASE_62)
+        curr = random.choice(BASE_62)
+        short_url += curr
+        code += curr
 
-    return ans
+
+    return (short_url, code)
 
 def is_valid_url(url:str) -> bool:
-    try:
-        result = urlparse(url)
-        # Check if scheme and netloc (domain) are present
-        return all([result.scheme in ['http', 'https'], result.netloc])
-    except Exception:
-        return False
-
+    # The 'r' before the string denotes a raw string, which handles regex backslashes cleanly
+    pattern = r"^(https?:\/\/)?(www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,63}(\/[-a-zA-Z0-9()@:%_\+.~#?&//=]*)?$"
+    
+    # re.match checks if the pattern matches the string from the beginning to the end
+    if re.match(pattern, url):
+        return True
+    return False
