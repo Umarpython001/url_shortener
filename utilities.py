@@ -5,7 +5,7 @@ BASE_62 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
 def generate_short_url():
 
-    ans = ""
+    ans = "https://shorten.com/"
     for i in range(7):
         ans += random.choice(BASE_62)
 
