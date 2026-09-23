@@ -8,6 +8,6 @@ class Maps(Base):
     __tablename__ = "urls"
 
     id = Column(Integer, primary_key=True, index=True)
-    long_url = Column(String, index=True)
+    long_url = Column(String, index=True, unique=True)
     shortened_url = Column(String, unique=True, index=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
