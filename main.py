@@ -25,7 +25,7 @@ def get_db():
 
 
 
-
+ 
 @app.get("/shortener/{unique}")
 def redirect(request: Request, unique :Annotated[str, Path(
 
@@ -37,13 +37,10 @@ def redirect(request: Request, unique :Annotated[str, Path(
 
     original_long = db.query(Maps).filter(Maps.unique_code == unique).first()
 
-    print("\n\n\n\n\n\n")
-    print(original_long.long_url)
-    print(type(original_long))
-    print("\n\n\n\n\n\n")
-
-    return RedirectResponse(url=original_long.long_url, status_code=302)
-
+    if original_long:
+        return RedirectResponse(url=original_long.long_url, status_code=302)
+    else:
+        return {"status":"error","message":"shorturn does not exist"}
 
 
 
@@ -70,6 +67,10 @@ def shorten(provided_long_url, response: Response, db: Session = Depends(get_db)
     """
     NOW WE HAVE CHECKED FOR ERRORS
     """
+
+    if not (provided_long_url.startswith(("https://", "http://"))):
+        provided_long_url = "https://www." + provided_long_url
+
 
     short_url, unique_code = generate_short_url()
 
