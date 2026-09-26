@@ -5,11 +5,9 @@ import os
 
 load_dotenv()
 
-DB_PASSWORD = os.getenv("POSTGRES_DB_PASSWORD")
-
 # postgresql://[username]:[password]@[hostname]:[port]/[database_name]
 
-DATABASE_URL = f"postgresql://postgres:{DB_PASSWORD}@localhost:5432/url_shortener"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(
     DATABASE_URL, 
