@@ -46,11 +46,7 @@ def redirect(request: Request, unique :Annotated[str, Path(
 
     original_long = db.query(maps).filter(maps.unique_code == unique).first()
 
-    print("\n\n\n", request.url, original_long.long_url, "\n\n\n")
-
     if original_long:
-        # return {"short_url":request.url,
-        # "long_url":original_long}
         return RedirectResponse(url=original_long.long_url, status_code=302)
     else:
         return {"status":"error","message":"shorturn does not exist"}
