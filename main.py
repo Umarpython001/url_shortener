@@ -25,11 +25,16 @@ def get_db():
 
 @app.get("/all_shortened")
 def get_all(db: Session = Depends(get_db)):
-    ans = db.query(maps).all()
-    ret={}
-    for an in ans:
-        ret[an.id] = {"short_url":an.shortened_url,"long_url":an.long_url}
-    return ret
+    try:
+        ans = db.query(maps).all()
+    except Exception as e:
+        return {"status":"error", "message":"an error occured"}
+    else:
+        ret={}
+        for an in ans:
+            ret[an.id] = {"short_url":an.shortened_url,"long_url":an.long_url}
+    
+        return ret
 
 
 
