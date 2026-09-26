@@ -4,7 +4,7 @@ from database import Base
 
 
 
-class Maps(Base):
+class maps(Base):
     __tablename__ = "urls"
 
     id = Column(Integer, primary_key=True, index=True)
