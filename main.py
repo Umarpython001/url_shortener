@@ -2,7 +2,7 @@ from fastapi import FastAPI, Path, Query, Depends, status, Response, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
-from models import Maps, Base
+from models import maps, Base
 from utilities import is_valid_url, generate_short_url
 from typing import Annotated
 
@@ -23,6 +23,16 @@ def get_db():
         db.close()
 
 
+@app.get("/all_shortened")
+def get_all(db: Session = Depends(get_db)):
+    ans = db.query(maps).all()
+    ret={}
+    for an in ans:
+        ret[an.id] = {"short_url":an.shortened_url,"long_url":an.long_url}
+    return ret
+
+
+
 
 
  
@@ -34,10 +44,13 @@ def redirect(request: Request, unique :Annotated[str, Path(
     max_length=7
     )], db: Session = Depends(get_db)):
 
+    original_long = db.query(maps).filter(maps.unique_code == unique).first()
 
-    original_long = db.query(Maps).filter(Maps.unique_code == unique).first()
+    print("\n\n\n", request.url, original_long.long_url, "\n\n\n")
 
     if original_long:
+        # return {"short_url":request.url,
+        # "long_url":original_long}
         return RedirectResponse(url=original_long.long_url, status_code=302)
     else:
         return {"status":"error","message":"shorturn does not exist"}
@@ -74,7 +87,7 @@ def shorten(provided_long_url, response: Response, db: Session = Depends(get_db)
 
     short_url, unique_code = generate_short_url()
 
-    new_url = Maps(
+    new_url = maps(
         long_url=provided_long_url,
         shortened_url=short_url,
         unique_code=unique_code,
