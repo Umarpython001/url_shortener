@@ -22,6 +22,10 @@ def get_db():
     finally:
         db.close()
 
+@app.get("/")
+def go_to_docs(request: Request):
+    return RedirectResponse(url=f"{request.url}docs", status_code=302)
+
 
 @app.get("/all_shortened")
 def get_all(db: Session = Depends(get_db)):
@@ -42,12 +46,15 @@ def get_all(db: Session = Depends(get_db)):
 
  
 @app.get("/shortener/{unique}")
-def redirect(request: Request, unique :Annotated[str, Path(
+def redirect(request: Request, 
+             unique: Annotated[str, Path(
+                description="Unique 7 character string generated",
+                min_length=7,
+                max_length=7
+                )], 
+            db: Session = Depends(get_db)):
 
-    description="Unique 7 character string generated",
-    min_length=7,
-    max_length=7
-    )], db: Session = Depends(get_db)):
+    
 
     original_long = db.query(maps).filter(maps.unique_code == unique).first()
 
