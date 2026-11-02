@@ -1,5 +1,5 @@
 import re
-import random 
+import random
 
 BASE_62 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
 
