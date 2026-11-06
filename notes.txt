@@ -1,0 +1,7 @@
+On this first iteration of the URL shortener, this is the current stack. It uses a fast API backend for reads and writes. Writes are creating short URLs directly: you paste in a long URL and generate a short URL. Reads are just you paste in the short URL and get redirected to the long URL.
+
+Here's the thing about multiple requests coming in at the same time for writes. When writing multiple requests at the same time, creating multiple short URLs from long URLs might fail first because SQLAlchemy specifically cannot write to the database concurrently. It uses a queue, so the first write has to complete before the second write continues. That is the characteristic of SQLlite.
+
+If I have 500 writes coming in at the same time, 500 shortenings of a URL at the same time, that will be a long process because each shortened of a URL is added to the database one by one. This will eventually lead to subsequent writes returning errors because it has to wait for the ones in front of it to finish. Each write process has a default timer for it to get executes before it just returns an internal server error: failed. That is why writes will fail first. 
+
+Also, with SQLite, a write request to SQLite locks the entire database, so read requests cannot come in or be accepted. If I have 500 write requests coming in, read requests will have to wait until those 500 write requests are satisfied. A write request locks the entire database. 
